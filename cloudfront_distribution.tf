@@ -5,15 +5,33 @@ locals {
   s3_origin_id = "myS3Origin"
 }
 
+resource "aws_cloudfront_cache_policy" "s3-cloudfront-policy" {
+  name        = "${var.prefix}30m-TTL"
+  default_ttl = 1800
+  max_ttl     = 1800
+  min_ttl     = 1800
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "none"
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+  }
+}
+
 resource "aws_cloudfront_distribution" "s3-cloudfront" {
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
-    cache_policy_id        = "98bea9ec-fe04-4d6d-a220-59d6fba7ebad"
+    cache_policy_id        = aws_cloudfront_cache_policy.s3-cloudfront-policy.id
     cached_methods         = ["GET", "HEAD"]
     compress               = "true"
-    default_ttl            = "3600"
-    max_ttl                = "3600"
-    min_ttl                = "3600"
+    default_ttl            = "1800"
+    max_ttl                = "1800"
+    min_ttl                = "1800"
     smooth_streaming       = "false"
     target_origin_id       = local.s3_origin_id
     viewer_protocol_policy = "https-only"
