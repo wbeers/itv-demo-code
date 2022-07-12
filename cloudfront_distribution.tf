@@ -29,9 +29,6 @@ resource "aws_cloudfront_distribution" "s3-cloudfront" {
     cache_policy_id        = aws_cloudfront_cache_policy.s3-cloudfront-policy.id
     cached_methods         = ["GET", "HEAD"]
     compress               = "true"
-    default_ttl            = "1800"
-    max_ttl                = "1800"
-    min_ttl                = "1800"
     smooth_streaming       = "false"
     target_origin_id       = local.s3_origin_id
     viewer_protocol_policy = "https-only"
